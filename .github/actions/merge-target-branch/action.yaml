@@ -2,6 +2,7 @@ name: "Merge target branch into PR branch"
 description: "On pull request merge target branch into PR branch"
 
 runs:
+  using: "composite"
   steps:
       - name: Merge target branch into PR branch
         run: |
