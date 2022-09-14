@@ -1,0 +1,25 @@
+name: "Test on PR"
+
+on:
+  pull_request:
+    paths:
+      - '**/**'
+    branches:
+      - dev
+      - staging
+      - master
+      - main
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Merge target branch to PR branch
+        run: |
+            git fetch --unshallow
+            git merge $GITHUB_BASE_REF
+      - name: Run tests
+        run: |
+          echo "Run test"
