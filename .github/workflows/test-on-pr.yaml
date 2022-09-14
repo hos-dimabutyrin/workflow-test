@@ -16,11 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Merge target branch into PR branch
-        run: |
-            git fetch --unshallow
-            echo "Trying to merge $GITHUB_BASE_REF into $GITHUB_HEAD_REF:"
-            git merge -v --no-commit --no-ff origin/$GITHUB_BASE_REF
+      - uses: ../actions/merge-target-branch
       - name: Run tests
         run: |
             echo "Run test"
