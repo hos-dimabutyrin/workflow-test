@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Merge target branch to PR branch
         run: |
-            git fetch origin $GITHUB_BASE_REF
+            git fetch --unshallow
             git merge --no-commit --no-ff origin/$GITHUB_BASE_REF
       - name: Run tests
         run: |
