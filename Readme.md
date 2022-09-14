@@ -1,2 +1,2 @@
 Test if the workflow is working as expected
-Do test #5
+Do test #6
