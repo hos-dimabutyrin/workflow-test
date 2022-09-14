@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: ../actions/merge-target-branch
+      - uses: ./.github/actions/merge-target-branch
       - name: Run tests
         run: |
             echo "Run test"
