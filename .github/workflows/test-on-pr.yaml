@@ -19,7 +19,7 @@ jobs:
       - name: Merge target branch to PR branch
         run: |
             git fetch --unshallow
-            git merge $GITHUB_BASE_REF
+            git merge origin/$GITHUB_BASE_REF
       - name: Run tests
         run: |
           echo "Run test"
