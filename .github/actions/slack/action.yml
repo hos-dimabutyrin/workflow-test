@@ -1,0 +1,63 @@
+name: "Run Tests"
+description: "Run Tests"
+
+inputs:
+  slack-webhook-url:
+    required: false
+  sonar-token:
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+      id: checkout
+
+    - name: Debug
+      id: debug
+      shell: bash
+      run: echo $GITHUB_CONTEXT
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+
+    - uses: actions/checkout@v2
+
+    - name: Merge target branch into PR branch
+      uses: ./.github/actions/merge-target-branch
+
+    - name: Install SonarQube Tools
+      id: install_sonarqube
+      shell: bash
+      run: |
+        sudo gem install slather
+
+    - name: Run tests
+      id: tests
+      shell: bash
+      run: |
+        echo "Run test"
+        ls -lah .github/**/**
+
+    - name: Get Code Coverage
+      id: get_code_coverage
+      shell: bash
+      run: |
+        echo slather coverage --sonarqube-xml ${params} ${project}
+        bash -c "slather coverage --sonarqube-xml ${params} ${project}"
+      env:
+        project: '"My App.xcodeproj"'
+        params: '
+        --scheme "My App - Development"
+        --workspace "My App.xcworkspace"'
+
+    - name: Slack Notification
+      uses: act10ns/slack@v1
+      if: >
+        failure() &&
+        (github.ref_name == 'master' || github.ref_name == 'staging' || github.head_ref == 'feature/slather')
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#debugandtest'
+        webhook-url: ${{ inputs.slack-webhook-url }}
+

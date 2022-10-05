@@ -1,0 +1,22 @@
+on:
+  workflow_call:
+    secrets:
+      SLACK_WEBHOOK_URL:
+        required: false
+      SONAR_TOKEN:
+        required: false
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug
+        run: echo $GITHUB_CONTEXT
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+      - uses: actions/checkout@v2
+      - name: Run tests
+        uses: ./.github/actions/slack
+        with:
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
