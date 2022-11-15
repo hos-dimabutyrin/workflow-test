@@ -1,7 +1,6 @@
 name: Main Workflow
 
 on:
-  repository_dispatch:
   push:
     branches:
       - dev
@@ -14,9 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Merge target branch into PR branch
-        uses: ./.github/actions/merge-target-branch
       - name: Run tests
         run: |
-            echo "Run test"
-            ls -lah .github/**/**
+            echo "OK"
