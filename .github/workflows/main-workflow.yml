@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: Tests
+    name: "Run Main Workflow"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

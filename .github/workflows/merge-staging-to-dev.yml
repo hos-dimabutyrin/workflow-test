@@ -25,6 +25,8 @@ jobs:
           git pull
           git merge --no-ff staging -m "Auto-merge staging to dev"
           git push
+      env:
+          GITHUB_TOKEN: ${{ secrets.TEST_GITHUB_PAT }}
   run_on_label_after_merge:
     if: >
       contains(github.event.pull_request.labels.*.name, 'iOS build') &&
