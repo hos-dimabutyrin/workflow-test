@@ -1,15 +1,41 @@
 name: Main Workflow
 
 on:
+  # Decorate a PR
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches:
+      - staging
+      - master
+      - main
+  # Update info for master and staging branches
   push:
     branches:
-      - dev
       - staging
+      - master
       - main
 
 jobs:
   test:
     name: "Run Main Workflow"
+    if: github.event_name == 'push' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: |
+            echo "OK"
+  check-if-pr-is-ready:
+    name: Check if this a Draft PR
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if it is a draft PR
+        run: |
+            echo "Looks like it is not a draft PR. Continue..."
+  test2:
+    name: "Run Main Workflow 2"
+    needs: check-if-pr-is-ready
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
