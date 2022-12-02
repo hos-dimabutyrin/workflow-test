@@ -1,0 +1,38 @@
+name: "Run iOS PR workflow"
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore:
+      - '.github/**'
+jobs:
+  run_PR_tests:
+    if: github.event.pull_request.draft == false
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: |
+            echo "Run test"
+  development_build:
+    needs: run_PR_tests
+    if: >
+      contains(github.event.pull_request.labels.*.name, 'iOS build') &&
+      github.event.pull_request.base.ref == 'dev'
+    name: Development Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run dev build
+        run: |
+            echo "Run dev build"
+  release_build:
+    needs: run_PR_tests
+    if: >
+      contains(github.event.pull_request.labels.*.name, 'iOS build') &&
+      github.event.pull_request.base.ref == 'master'
+    name: Release Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run release build
+        run: |
+            echo "Run release build"
