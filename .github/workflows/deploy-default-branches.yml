@@ -1,0 +1,16 @@
+name: Mono Deployment Workflow
+
+on:
+  push:
+    branches:
+      - dev
+      - staging
+      - master
+
+jobs:
+  deploy_backend:
+    uses: ./.github/workflows/deploy.yml
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

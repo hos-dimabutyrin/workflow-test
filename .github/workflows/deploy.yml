@@ -1,0 +1,25 @@
+on:
+  workflow_call:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: false
+      AWS_SECRET_ACCESS_KEY:
+        required: false
+      SLACK_WEBHOOK_URL:
+        required: false
+
+jobs:
+  full_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug
+        run: echo $GITHUB_CONTEXT
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+      - uses: actions/checkout@v2
+      - name: Deploy backend action
+        uses: ./.github/actions/deploy
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
