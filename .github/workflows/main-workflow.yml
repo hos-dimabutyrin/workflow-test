@@ -7,13 +7,11 @@ on:
     branches:
       - staging
       - master
-      - main
   # Update info for master and staging branches
   push:
     branches:
       - staging
       - master
-      - main
 
 jobs:
   test:
