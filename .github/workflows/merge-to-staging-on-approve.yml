@@ -1,0 +1,37 @@
+name: "Merge PR to staging on approve"
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  merge-pr-to-staging:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.review.state == 'approved' &&
+      github.event.pull_request.base.ref == 'master'
+    steps:
+      - name: Debug
+        run: echo $GITHUB_CONTEXT
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+      - name: Git checkout
+        uses: actions/checkout@v3
+        # with:
+        #   token: ${{ secrets.MONOREPO_TOKEN }}
+        #   ref: ${{ github.head_ref }}
+        #   fetch-depth: 0
+      # - name: Merge PR branch to staging
+      #   run: |
+      #     git config user.name "GitHub Actions"
+      #     git config user.email github-actions[bot]@users.noreply.github.com
+      #     git checkout staging
+      #     git merge ${{ github.head_ref }}
+      #     git push origin staging
+      - name: Merge PR branch to staging
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: ${{ github.head_ref }}
+          target_branch: staging
+          github_token: ${{ github.token }}
