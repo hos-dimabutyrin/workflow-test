@@ -1,0 +1,36 @@
+name: "Merge PR to staging on approve"
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  merge-pr-to-staging:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.review.state == 'approved' &&
+      github.event.pull_request.base.ref == 'master'
+    steps:
+      - name: Debug
+        run: echo $GITHUB_CONTEXT
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+      - uses: actions/checkout@v3
+        name: Git checkout
+        with:
+          # must be done using PAT to trigger following workflows
+          # the token is expiring once a year
+          # to check if it's active or manage it's permissions go to:
+          # https://github.com/organizations/hOS-Engineering/settings/personal-access-tokens/active
+          token: ${{ secrets.TEST_GITHUB_PAT }}
+          ref: staging
+      - name: Set Git config
+        run: |
+            git config --local user.email "actions@github.com"
+            git config --local user.name "Github Actions"
+      - name: Merge PR branch to staging
+        run: |
+          git fetch --unshallow
+          git checkout staging
+          git merge --no-ff --no-edit ${{ github.event.pull_request.head.ref }}
+          git push origin staging
