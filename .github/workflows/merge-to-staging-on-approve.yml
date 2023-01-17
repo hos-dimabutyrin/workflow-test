@@ -32,6 +32,6 @@ jobs:
         uses: devmasx/merge-branch@master
         with:
           type: now
-          from_branch: ${{ github.head_ref }}
+          from_branch: ${{ github.event.pull_request.head.ref }}
           target_branch: staging
           github_token: ${{ github.token }}
