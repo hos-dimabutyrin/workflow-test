@@ -15,23 +15,22 @@ jobs:
         run: echo $GITHUB_CONTEXT
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
-      - name: Git checkout
-        uses: actions/checkout@v3
-        # with:
-        #   token: ${{ secrets.MONOREPO_TOKEN }}
-        #   ref: ${{ github.head_ref }}
-        #   fetch-depth: 0
-      # - name: Merge PR branch to staging
-      #   run: |
-      #     git config user.name "GitHub Actions"
-      #     git config user.email github-actions[bot]@users.noreply.github.com
-      #     git checkout staging
-      #     git merge ${{ github.head_ref }}
-      #     git push origin staging
-      - name: Merge PR branch to staging
-        uses: devmasx/merge-branch@master
+      - uses: actions/checkout@v3
+        name: Git checkout
         with:
-          type: now
-          from_branch: ${{ github.event.pull_request.head.ref }}
-          target_branch: staging
-          github_token: ${{ github.token }}
+          # must be done using PAT to trigger following workflows
+          # the token is expiring once a year
+          # to check if it's active or manage it's permissions go to:
+          # https://github.com/organizations/hOS-Engineering/settings/personal-access-tokens/active
+          token: ${{ secrets.MONOREPO_TOKEN }}
+          ref: staging
+      - name: Set Git config
+        run: |
+            git config --local user.email "actions@github.com"
+            git config --local user.name "Github Actions"
+      - name: Merge PR branch to staging
+        run: |
+          git fetch --unshallow
+          git checkout staging
+          git merge --no-ff ${{ github.event.pull_request.head.ref }}
+          git push origin staging
