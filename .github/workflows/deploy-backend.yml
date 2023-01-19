@@ -1,0 +1,53 @@
+name: "Deploy Backend"
+
+on: 
+  workflow_call:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_ACCOUNT:
+        required: true
+      AWS_REGION:
+        required: true
+      SLACK_WEBHOOK_URL:
+        required: true
+    inputs:
+      environment:
+        type: string
+        required: true
+
+jobs:
+  deploy_backend:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    # using: "composite"
+    steps:
+      - name: Debug
+        run: echo $GITHUB_CONTEXT
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+      - uses: actions/checkout@v2
+        id: checkout
+      - name: Deploy Backend
+        id: deploy
+        run: |
+          echo "Deploy OK on ${{ inputs.environment }}"
+          echo "Git $(git status)"
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCOUNT: ${{ secrets.AWS_ACCOUNT }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+      - name: Slack Notification
+        uses: act10ns/slack@v1
+        if: >
+          failure() &&
+          (${{ inputs.environment }}" == 'prod' || ${{ inputs.environment }}" == 'staging')
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+          channel: '#debugandtest'
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
