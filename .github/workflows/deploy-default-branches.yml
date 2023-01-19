@@ -1,32 +1,28 @@
-name: Mono Deployment Workflow
+name: "Deploy Dev and Staging on push to master"
 
 on:
   push:
     branches:
-      - dev
-      - staging
       - master
 
 jobs:
-  deploy_backend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        id: checkout
-      - name: Deploy Backend
-        id: deploy
-        run: echo "Deploy OK"
-        shell: bash
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.1
-        if: github.ref_name == 'master'
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create a GitHub release
-        uses: ncipollo/release-action@v1
-        if: github.ref_name == 'master'
-        with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
-          body: ${{ steps.tag_version.outputs.changelog }}
+  deploy_backend_dev:
+    uses: ./.github/workflows/deploy-backend.yml
+    with:
+      environment: dev
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCOUNT: ${{ secrets.AWS_ACCOUNT }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  deploy_backend_staging:
+    uses: ./.github/workflows/deploy-backend.yml
+    with:
+      environment: staging
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCOUNT: ${{ secrets.AWS_ACCOUNT }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
