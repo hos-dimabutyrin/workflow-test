@@ -1,6 +1,6 @@
 name: "Deploy Backend"
 
-on: 
+on:
   workflow_call:
     secrets:
       AWS_ACCESS_KEY_ID:
@@ -42,10 +42,10 @@ jobs:
           AWS_ACCOUNT: ${{ secrets.AWS_ACCOUNT }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
       - name: Slack Notification
-        uses: act10ns/slack@v1
-        if: >
-          failure() &&
-          (${{ inputs.environment }}" == 'prod' || ${{ inputs.environment }}" == 'staging')
+        if: |
+          ( failure() && inputs.environment == 'prod') ||
+          ( failure() && inputs.environment == 'staging')
+        uses: act10ns/slack@v2
         with:
           status: ${{ job.status }}
           steps: ${{ toJson(steps) }}
