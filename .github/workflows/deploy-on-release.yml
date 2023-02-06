@@ -2,7 +2,7 @@ name: "Deploy Release to prod"
 
 on:
   release:
-    type: published
+    types: [published]
 
 jobs:
   deploy_backend_prod:
