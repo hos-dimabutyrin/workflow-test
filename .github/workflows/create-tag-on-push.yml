@@ -1,0 +1,17 @@
+name: "Create version tag on push to master"
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  create_tag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v3
+      - name: Bump version and push tag
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
