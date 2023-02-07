@@ -18,6 +18,10 @@ on:
         type: string
         required: true
 
+concurrency:
+  group: deploy-${{ inputs.environment }}
+  cancel-in-progress: false
+
 jobs:
   deploy_backend:
     runs-on: ubuntu-latest
@@ -33,6 +37,7 @@ jobs:
       - name: Deploy Backend
         id: deploy
         run: |
+          sleep 300
           echo "Deploy OK on ${{ inputs.environment }}"
           echo "Git $(git status)"
         shell: bash
