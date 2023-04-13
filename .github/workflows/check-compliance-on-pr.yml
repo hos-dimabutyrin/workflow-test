@@ -1,16 +1,19 @@
-name: "Check conventional commit compliance on PR"
+name: "Check conventional compliance on PR"
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
-  link-pr-to-asana:
-    name: "Check conventional commit compliance"
+  check-compliance:
+    name: "Check conventional compliance"
     runs-on: ubuntu-latest
     timeout-minutes: 3
 
     steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
       - name: "Misc: Check commit messages for conventional compliance"
         uses: aevea/commitsar@v0.20.1
 
