@@ -20,6 +20,7 @@ jobs:
         uses: aevea/commitsar@v0.20.1
 
       - name: "Misc: Check PR title"
+        if: always()
         uses: amannn/action-semantic-pull-request@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
