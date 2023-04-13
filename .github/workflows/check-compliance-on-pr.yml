@@ -2,7 +2,7 @@ name: "Check conventional compliance on PR"
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, edited, synchronize, reopened, ready_for_review]
 
 jobs:
   check-compliance:
@@ -13,12 +13,14 @@ jobs:
 
     steps:
       - name: "Checkout"
+        if: ${{ github.event.action != 'edited' }}
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: "Misc: Check commit messages"
+        if: ${{ github.event.action != 'edited' }}
         uses: aevea/commitsar@v0.20.1
         with:
           cache: 'docker'
