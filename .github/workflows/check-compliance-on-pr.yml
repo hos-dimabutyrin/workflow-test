@@ -6,18 +6,20 @@ on:
 
 jobs:
   check-compliance:
-    name: "Check conventional compliance"
+    name: "Check compliance"
     runs-on: ubuntu-latest
     timeout-minutes: 3
 
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
-
-      - name: "Misc: Check commit messages for conventional compliance"
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: "Misc: Check commit messages"
         uses: aevea/commitsar@v0.20.1
 
-      - name: "Misc: Check PR title for conventional compliance"
+      - name: "Misc: Check PR title"
         uses: amannn/action-semantic-pull-request@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
