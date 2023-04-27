@@ -1,0 +1,25 @@
+name: "Deploy Backend daily"
+
+on:
+  schedule:
+    - cron: '20 10 * * *'
+
+jobs:
+  check_date:
+    runs-on: ubuntu-latest
+    name: "Launch Backend Deployment"
+    timeout-minutes: 3
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Misc: Check latest commit date is less than a day"
+        id: should_run
+        continue-on-error: true
+        run: test -z $(git rev-list --after="24 hours" ${{ github.sha }}) &amp;&amp; echo "::set-output name=should_run::false"
+
+      - name: "Misc: Trigger Backend Deploy"
+        if: ${{ steps.check_date.outputs.should_run != 'false' }}
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: deploy-manually.yml
