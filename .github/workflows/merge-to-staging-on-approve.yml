@@ -14,6 +14,11 @@ jobs:
       github.event.review.state == 'approved' &&
       github.event.pull_request.base.ref == 'master'
     steps:
+      - name: "Misc: Analytics with gitboard.io"
+        uses: gitboard-io/gitboard-action@main
+        with:
+          username: hos-dimabutyrin
+          key: ${{ secrets.GITBOARD_SECRET }}
       - name: Debug
         run: echo $GITHUB_CONTEXT
         env:

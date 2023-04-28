@@ -10,6 +10,12 @@ jobs:
     name: Tests
     runs-on: ubuntu-latest
     steps:
+      - name: "Misc: Analytics with gitboard.io"
+        uses: gitboard-io/gitboard-action@main
+        with:
+          username: hos-dimabutyrin
+          key: ${{ secrets.GITBOARD_SECRET }}
+
       - uses: actions/checkout@v2
       - name: Run tests
         run: |
@@ -33,6 +39,12 @@ jobs:
     name: Release Build
     runs-on: ubuntu-latest
     steps:
+      - name: "Misc: Analytics with gitboard.io"
+        uses: gitboard-io/gitboard-action@main
+        with:
+          username: hos-dimabutyrin
+          key: ${{ secrets.GITBOARD_SECRET }}
+
       - name: Run release build
         run: |
             echo "Run release build"

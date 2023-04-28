@@ -19,14 +19,22 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
+      - name: "Misc: Analytics with gitboard.io"
+        uses: gitboard-io/gitboard-action@main
+        with:
+          username: hos-dimabutyrin
+          key: ${{ secrets.GITBOARD_SECRET }}
+
       - name: Debug
         run: echo $GITHUB_CONTEXT
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
+
       - uses: actions/checkout@v2
       - name: Run tests
         run: |
             echo "OK"
+
   check-if-pr-is-ready:
     name: Check if this a Draft PR
     if: github.event.pull_request.draft == false
@@ -40,7 +48,14 @@ jobs:
     needs: check-if-pr-is-ready
     runs-on: ubuntu-latest
     steps:
+      - name: "Misc: Analytics with gitboard.io"
+        uses: gitboard-io/gitboard-action@main
+        with:
+          username: hos-dimabutyrin
+          key: ${{ secrets.GITBOARD_SECRET }}
+
       - uses: actions/checkout@v2
+
       - name: Run tests
         run: |
             echo "OK"

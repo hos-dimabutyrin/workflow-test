@@ -10,6 +10,12 @@ jobs:
     name: "Launch Backend Deployment"
     timeout-minutes: 3
     steps:
+      - name: "Misc: Analytics with gitboard.io"
+        uses: gitboard-io/gitboard-action@main
+        with:
+          username: hos-dimabutyrin
+          key: ${{ secrets.GITBOARD_SECRET }}
+
       - name: "Checkout"
         uses: actions/checkout@v3
 

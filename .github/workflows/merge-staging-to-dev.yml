@@ -15,20 +15,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set Git config
-      run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "Github Actions"
-    - name: Merge staging to dev
-      run: |
-          git fetch --unshallow
-          git checkout dev
-          git pull
-          git merge --no-ff staging -m "Auto-merge staging to dev"
-          git push
-      env:
-          GITHUB_TOKEN: ${{ secrets.TEST_GITHUB_PAT }}
+      - name: "Misc: Analytics with gitboard.io"
+        uses: gitboard-io/gitboard-action@main
+        with:
+          username: hos-dimabutyrin
+          key: ${{ secrets.GITBOARD_SECRET }}
+
+      - uses: actions/checkout@v2
+
+      - name: Set Git config
+        run: |
+            git config --local user.email "actions@github.com"
+            git config --local user.name "Github Actions"
+
+      - name: Merge staging to dev
+        run: |
+            git fetch --unshallow
+            git checkout dev
+            git pull
+            git merge --no-ff staging -m "Auto-merge staging to dev"
+            git push
+        env:
+            GITHUB_TOKEN: ${{ secrets.TEST_GITHUB_PAT }}
   run_on_label_after_merge:
     if: >
       contains(github.event.pull_request.labels.*.name, 'iOS build') &&
@@ -36,9 +44,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Do nothing
-      run: |
-          echo "The current branch is:"
-          git rev-parse --abbrev-ref HEAD
-      shell: bash
+      - name: "Misc: Analytics with gitboard.io"
+        uses: gitboard-io/gitboard-action@main
+        with:
+          username: hos-dimabutyrin  
+          key: ${{ secrets.GITBOARD_SECRET }}
+      - uses: actions/checkout@v2
+      - name: Do nothing
+        run: |
+            echo "The current branch is:"
+            git rev-parse --abbrev-ref HEAD
+        shell: bash
