@@ -13,6 +13,8 @@ on:
         required: true
       SLACK_WEBHOOK_URL:
         required: true
+      GITBOARD_SECRET:
+        required: true
     inputs:
       environment:
         type: string
@@ -28,6 +30,11 @@ jobs:
     environment: ${{ inputs.environment }}
     # using: "composite"
     steps:
+      - name: "Misc: Analytics with gitboard.io"
+        uses: gitboard-io/gitboard-action@main
+        with:
+          username: hos-dimabutyrin
+          key: ${{ secrets.GITBOARD_SECRET }}
       - name: Debug
         run: echo $GITHUB_CONTEXT
         env:
