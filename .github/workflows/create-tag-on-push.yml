@@ -29,6 +29,15 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: "Misc: Create Sentry release"
+        env:
+          SENTRY_RELEASE_BUNDLE: "my-app@1.0+519"
+        run: |
+          echo sentry-cli releases new "$SENTRY_RELEASE_BUNDLE"
+          echo sentry-cli releases set-commits "$SENTRY_RELEASE_BUNDLE" --commit "$GITHUB_SHA" --ignore-missing
+          echo sentry-cli releases finalize "$SENTRY_RELEASE_BUNDLE"
+          echo sentry-cli upload-dif --include-sources "./build/*.xcarchive/dSYMs/*.app.dSYM"
+
   create_release:
     if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     needs: create_tag
