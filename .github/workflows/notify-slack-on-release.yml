@@ -21,9 +21,9 @@ jobs:
       id: release_notes_text
       run: |
         EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-        echo "RELEASE_NOTES<<$EOF" >> "$GITHUB_OUTPUT"
-        awk '{printf "%s\\n", $0}' ${{ steps.release_notes_file.outputs.RELEASE_NOTES_FILE }} >> $GITHUB_OUTPUT
-        echo "$EOF" >> "$GITHUB_OUTPUT"
+        echo "RELEASE_NOTES<<$EOF" >> "$GITHUB_ENV"
+        awk '{printf "%s\\n", $0}' ${{ steps.release_notes_file.outputs.RELEASE_NOTES_FILE }} >> "$GITHUB_ENV"
+        echo "$EOF" >> "$GITHUB_ENV"
     - name: "Notify release to Slack"
       uses: slackapi/slack-github-action@v1.24.0
       with:
