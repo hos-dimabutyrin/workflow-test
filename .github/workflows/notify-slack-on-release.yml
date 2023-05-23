@@ -1,0 +1,45 @@
+name: "Notify Release to slack"
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  notify_to_slack:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: |
+        echo "${{ github.event.release.tag_name }}"
+        echo "${{ github.event.release.name }}"
+        echo "${{ github.event.release.body }}"
+    - name: "Release notes file variable"
+      id: release_notes_file
+      run: |
+        echo RELEASE_NOTES_FILE=./release-notes.JjUJHhBICn >> $GITHUB_OUTPUT
+    - name: "Release notes variable"
+      id: release_notes_text
+      run: |
+        RELEASE_NOTES="$(cat ${{jobs.release_notes_file.outputs.RELEASE_NOTES_FILE}})"
+        echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_OUTPUT
+    - name: "Notify release to Slack"
+      uses: slackapi/slack-github-action@v1.24.0
+      with:
+        channel-id: "#debugandtest"
+        # For posting a rich message using Block Kit
+        payload: |
+          {
+            "text": "New release ${{ github.event.release.name }} has been published:",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "${{ github.event.release_notes_text.outputs.RELEASE_NOTES }}"
+                }
+              }
+            ]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

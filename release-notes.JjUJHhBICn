@@ -1,0 +1,3 @@
+Other:
+ci(fix): update release notes for testflight builds
+ci(improvements): sentry release and dSYM upload
