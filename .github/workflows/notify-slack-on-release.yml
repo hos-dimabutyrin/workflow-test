@@ -32,13 +32,13 @@ jobs:
         # For posting a rich message using Block Kit
         payload: |
           {
-            "text": "New release ${{ github.event.release.name }} has been published:",
+            "text": "New release ${{ github.event.release.name }} has been published",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ steps.release_notes_text.outputs.RELEASE_NOTES }}"
+                  "text": "**New release ${{ github.event.release.name }} has been published:**\n\n${{ steps.release_notes_text.outputs.RELEASE_NOTES }}"
                 }
               }
             ]
