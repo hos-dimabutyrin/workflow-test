@@ -20,7 +20,7 @@ jobs:
     - name: "Release notes variable"
       id: release_notes_text
       run: |
-        RELEASE_NOTES="$(cat ${{jobs.release_notes_file.outputs.RELEASE_NOTES_FILE}})"
+        RELEASE_NOTES="$(cat ${{ steps.release_notes_file.outputs.RELEASE_NOTES_FILE }})"
         echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_OUTPUT
     - name: "Notify release to Slack"
       uses: slackapi/slack-github-action@v1.24.0
@@ -35,7 +35,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ github.event.release_notes_text.outputs.RELEASE_NOTES }}"
+                  "text": "${{ steps.release_notes_text.outputs.RELEASE_NOTES }}"
                 }
               }
             ]
