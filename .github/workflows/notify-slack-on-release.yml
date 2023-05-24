@@ -28,17 +28,17 @@ jobs:
     - name: "Notify release to Slack"
       uses: slackapi/slack-github-action@v1.24.0
       with:
-        channel-id: "#debugandtest"
+        channel-id: "T02GE83QF19"
         # For posting a rich message using Block Kit
         payload: |
           {
-            "text": "New release ${{ github.event.release.name }} has been published",
+            "text": "New release ${{ github.event.release.name }} has been published:\n\n${{ steps.release_notes_text.outputs.RELEASE_NOTES }}",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "**New release ${{ github.event.release.name }} has been published:**\n\n${{ steps.release_notes_text.outputs.RELEASE_NOTES }}"
+                  "text": "*New release ${{ github.event.release.name }} has been published:*\n\n${{ steps.release_notes_text.outputs.RELEASE_NOTES }}"
                 }
               }
             ]
